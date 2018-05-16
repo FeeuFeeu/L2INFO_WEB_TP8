@@ -13,7 +13,7 @@ class InscriptionController {
 		return ($year%400==0)||(($year%4==0)&&($year%100!=0));
 	}
 	private function checkDate($day, $month, $year) {
-		if(empty($day) || empty($month) || empty($year)) {return false;}
+		//if(($day=="") || ($month=="") || ($year=="")) {return false;}
 		/* Si le mois est
 		 * avril, juin, septembre ou novembre,
 		 * on a 30 jours */

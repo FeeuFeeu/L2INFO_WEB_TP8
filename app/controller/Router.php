@@ -68,15 +68,45 @@ class Router {
 	* 
 	*/
 	private function inscription() {
-		if( isset($_POST['inputNom']) &&
-				isset($_POST['inputPrenom']) &&
-				isset($_POST['inputJourNais']) &&
-				isset($_POST['inputMoisNais']) &&
-				isset($_POST['inputAnNais']) &&
-				isset($_POST['inputEmail']) &&
-				isset($_POST['inputMotPasse']) &&
-				isset($_POST['inputConfMotPasse']) ) {
-					
+		if( isset($_POST['inputNom']) && !empty($_POST['inputNom']) &&
+			isset($_POST['inputPrenom']) && !empty($_POST['inputPrenom']) &&
+			isset($_POST['inputJourNais']) && !empty($_POST['inputJourNais']) &&
+			isset($_POST['inputMoisNais']) && !empty($_POST['inputMoisNais']) &&
+			isset($_POST['inputAnNais']) && !empty($_POST['inputAnNais']) &&
+			isset($_POST['inputEmail']) && !empty($_POST['inputEmail']) &&
+			isset($_POST['inputMotPasse']) && !empty($_POST['inputMotPasse']) &&
+			isset($_POST['inputConfMotPasse']) && !empty($_POST['inputConfMotPasse'])
+				) {
+					$ic = new InscriptionController;
+					$cm = new ClientManager;
+					if($ic->validate($_POST['inputNom'],$_POST['inputPrenom'],$_POST['inputJourNais'],
+					$_POST['inputMoisNais'],$_POST['inputAnNais'],$_POST['inputEmail'],
+					$_POST['inputMotPasse'],$_POST['inputConfMotPasse'])) {
+						if(count($cm->clientExiste($_POST['inputEmail']))!=0) {
+							return array(
+								'view' => DIR_VIEW . 'inscription.php', // string type
+								'name' => 'Inscription', // string type
+								'status' => 'signin_fail_email'
+							);
+						}
+						$cm->insertClient(
+							$_POST['inputNom'],$_POST['inputPrenom'],
+							$_POST['inputAnNais'] . "-" . $_POST['inputMoisNais'] . "-" . $_POST['inputJourNais'],
+							$_POST['inputEmail'],$_POST['inputMotPasse']
+						);
+						return array(
+							'view' => DIR_VIEW . 'inscription_ok.php', // string type
+							'name' => 'Inscription_ok', // string type
+							'status' => 'signin_success'
+						);
+					}
+					else {
+						return array(
+							'view' => DIR_VIEW . 'inscription.php', // string type
+							'name' => 'Inscription', // string type
+							'status' => 'signin_fail'
+						);
+					}
 		}
 		return array(
 			'view' => DIR_VIEW . 'inscription.php', // string type
@@ -96,6 +126,75 @@ class Router {
 		return array(
 			'view' => DIR_VIEW . 'erreur.php', // string type
 			'name' => 'Erreur' // string type
+		);
+	}
+	
+	/*
+	* 
+	* name: connexion()
+	* @brief Methode de recuperation des infos lors d'une connexion.
+	* @return Infos de la page produits et informations sur la connexion.
+	* 
+	*/
+	private function connexion() {
+		$pm = new ProduitManager;
+		if(isset($_POST['inputPasse']) and !empty($_POST['inputPasse']) and isset($_POST['inputId']) and !empty($_POST['inputId'])) {
+			$pass = $_POST['inputPasse'];
+			$mail = $_POST['inputId'];
+		}
+		else {
+			return array(
+			'view' => DIR_VIEW . 'produits.php', // string type
+			'name' => 'Produits', // string type
+			'data' => $pm->getProduits(), // PDOStatement type
+			'cats' => $pm->getCategories(), // array type
+			'status' => 'login_fail' // string type
+			);
+		}
+		$cm = new ClientManager;
+		$res = $cm->connexion($mail,$pass);
+		if(count($res)>0) {
+			$prenom = $res['prenom'];
+			$id = $res['id'];
+			$_SESSION['id_client'] = $id;
+			$_SESSION['prenom_client'] = $prenom;
+
+			return array(
+				'view' => DIR_VIEW . 'produits.php', // string type
+				'name' => 'Produits', // string type
+				'data' => $pm->getProduits(), // PDOStatement type
+				'cats' => $pm->getCategories(), // array type
+				'status' => 'login_success' // string type
+			);
+		}
+		return array(
+			'view' => DIR_VIEW . 'produits.php', // string type
+			'name' => 'Produits', // string type
+			'data' => $pm->getProduits(), // PDOStatement type
+			'cats' => $pm->getCategories(), // array type
+			'status' => 'login_fail' // string type
+		);
+
+	}
+	
+	/*
+	* 
+	* name: deconnexion()
+	* @brief Methode de recuperation des infos lors d'une deconnexion.
+	* @return Infos de la page produits et informations sur la connexion.
+	* 
+	*/
+	private function deconnexion() {
+		session_destroy();
+		$_SESSION['id_client']="";
+		$_SESSION['prenom_client']="";
+		$pm = new ProduitManager;
+		return array(
+			'view' => DIR_VIEW . 'produits.php', // string type
+			'name' => 'Produits', // string type
+			'data' => $pm->getProduits(), // PDOStatement type
+			'cats' => $pm->getCategories(), // array type
+			'status' => 'logout_success' // string type
 		);
 	}
 

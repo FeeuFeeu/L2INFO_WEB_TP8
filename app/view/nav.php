@@ -8,7 +8,22 @@
 			<a href="?page=panier" class="nav-link">Panier&nbsp<span class="badge badge-secondary">2</span></a>
 		</li>
 	</ul>
-	<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#compte"><span class="oi oi-person"></span>&nbsp Compte</button>
+			<?php 
+		if(isset($_SESSION['id_client']) and (!empty($_SESSION['id_client'])) and isset($_SESSION['prenom_client']) and (!empty($_SESSION['prenom_client']))) {
+				echo 
+				'<div class="btn-group">
+				  <a type="button" class="btn btn-outline-secondary" href=""><span class="oi oi-person"></span>
+					' . $_SESSION['prenom_client'] .  
+				  '</a>
+				  <a type="button" class="btn btn-outline-secondary" href="?page=deconnexion"><span class="oi oi-account-logout"></span></a>
+					
+				</div>';
+		}
+		else {
+		echo '<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#compte"><span class="oi oi-person"></span>&nbsp Compte</button>';
+		
+		} ?>
+	
 </nav>
 
 
@@ -24,10 +39,10 @@
 				</div>
 			
 				<div class="modal-body">
-					<form>
-						<input type="text" class="form-control" id="inputId" placeholder="Identifiant">
+					<form method="POST" action="?page=connexion">
+						<input type="text" class="form-control" id="inputId" placeholder="Identifiant" name="inputId">
 						<br />
-						<input type="text" class="form-control" id="inputPasse" placeholder="Mot de passe">
+						<input type="password" class="form-control" id="inputPasse" placeholder="Mot de passe" name="inputPasse">
 						<br />
 						<button type="submit" class="btn btn-secondary btn-block">Connexion</button>
 					</form>

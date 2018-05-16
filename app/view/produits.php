@@ -13,7 +13,7 @@
 		<?php 
 			foreach($data['cats'] as $cat) {
 				echo 	'<div class="form-check">' .
-						'<input class="form-check-input" type="checkbox" value="" id="' . $cat . '">' .
+						'<input class="form-check-input" type="checkbox" value="" id="' . $cat . '" name="' . $cat .'>' .
 						'<label class="form-check-label" for="' . $cat . '">' . $cat . '</label>' .
 						'</div>';
 			}

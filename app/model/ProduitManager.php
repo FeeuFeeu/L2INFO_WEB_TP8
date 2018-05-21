@@ -14,14 +14,12 @@
 		*/
 		public function getProduit($id_produit) {
 			$db = $this->connectDatabase();
-
-			$res = $db->query(
-				"select nom,prix,description,specificite,img0,img1,img2,img3,libelle 
-				from produits inner join catégories on catégories.id=produits.id_categorie
-				where produits.id=" . $id_produit
-			);
-
-			return $res; // PDOStatement
+			$requete = 	"select nom,prix,description,specificite,img0,img1,img2,img3,libelle 
+			from produits inner join catégories on catégories.id=produits.id_categorie
+			where produits.id=" . $id_produit;
+			$db = $db->prepare($requete);
+			$db->execute();
+			return $db; // PDOStatement
 		}
 		
 		/*
@@ -33,14 +31,15 @@
 		*/
 		public function getCategories() {
 			$db = $this->connectDatabase();
+			$requete = "select libelle from catégories";
+			$db = $db->prepare($requete);
+			$db->execute();
 
-			$res = $db->query("select libelle from catégories");
-
-			$cat = $res->fetchColumn();
+			$cat = $db->fetchColumn();
 			$cats = array();
 			while($cat!==false) {
 				array_push($cats,$cat);
-				$cat = $res->fetchColumn();
+				$cat = $db->fetchColumn();
 			}
 			return $cats; // array type
 		}
@@ -54,10 +53,11 @@
 		*/
 		public function getProduits() {
 			$db = $this->connectDatabase();
-			$res = $db->query(
-				"select nom,produits.id,libelle,prix,img0,img1,img2,img3 from produits inner join catégories on catégories.id=produits.id_categorie"
-			);
-			return $res; // PDOStatement type
+			$requete = "select nom,produits.id,libelle,prix,img0,img1,img2,img3 
+			from produits inner join catégories on catégories.id=produits.id_categorie";
+			$db = $db->prepare($requete);
+			$db->execute();
+			return $db; // PDOStatement type
 		}
 
 	}

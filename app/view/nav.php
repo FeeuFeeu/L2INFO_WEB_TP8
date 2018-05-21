@@ -12,7 +12,7 @@
 		if(isset($_SESSION['id_client']) and (!empty($_SESSION['id_client'])) and isset($_SESSION['prenom_client']) and (!empty($_SESSION['prenom_client']))) {
 				echo 
 				'<div class="btn-group">
-				  <a type="button" class="btn btn-outline-secondary" href=""><span class="oi oi-person"></span>
+				  <a type="button" class="btn btn-outline-secondary" href="#"><span class="oi oi-person"></span>
 					' . $_SESSION['prenom_client'] .  
 				  '</a>
 				  <a type="button" class="btn btn-outline-secondary" href="?page=deconnexion"><span class="oi oi-account-logout"></span></a>

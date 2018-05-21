@@ -5,31 +5,34 @@
 		
 		public function clientExiste($mail) {
 			$db = $this->connectDatabase();
-			return $db->query(
-				"SELECT id,prenom FROM clients WHERE mail='" . $mail . "'"
-			)->fetch();
+			$requete = "SELECT id,prenom FROM clients WHERE mail='" . $mail . "'";
+			$db = $db->prepare($requete);
+			$db->execute();
+			return $db->fetch();
 		}
 		
+		// retourne true si le client abien été ajouté
+		// false si un erreur 
 		public function insertClient($nom, $prenom, $naiss, $mail, $mdp) {
 			$db = $this->connectDatabase();
-			$db->query(
-			"INSERT INTO `clients` (`nom`, `prenom`, `naiss`, `mail`, `mdp`) VALUES
+			$requete = "INSERT INTO `clients` (`nom`, `prenom`, `naiss`, `mail`, `mdp`) VALUES
 			('" . $nom . "','" .
 				$prenom . "','" .
 				$naiss . "','" .
 				$mail . "','" .
 				hash('whirlpool', $mdp) .
-				"')"
-			);
+				"')";
+			$db = $db->prepare($requete);
+			return $db->execute();
 		}
 		
 		public function connexion($mail, $mdp) {
 			$db = $this->connectDatabase();
-			$db = $db->query(
-				"SELECT id,prenom FROM clients WHERE mail='" . $mail . "' and mdp='" . hash('whirlpool',$mdp) . "'");
-			if($db!=false) {
+			$requete = "SELECT id,prenom FROM clients WHERE mail='" . $mail . "' and mdp='" . hash('whirlpool',$mdp) . "'";
+			$db = $db->prepare($requete);
+			if($db->execute()) {
 				return $db->fetch();
 			}
-			return $db;
+			return false;
 		}
 	}

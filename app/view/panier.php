@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html>
+	<script>
+		$(document).ready(function() {
+			$('.sup_produit').click(function() {
+				id = $(this).attr('id');
+				id = parseInt(id.substring(4));
+				console.log('id produit : ' + id +  'end')
+				$.ajax({
+					url: 'public/ajax/suppressionProduit.php',
+					type: 'POST',
+					data: 'idProduit=' + id,
+					success:function(html) {
+						afficher(html);
+					}
+				});
+			});
+		});
 
+		function afficher(html) {
+			console.log('id produit : ' + html +  'end')
+			$('#nb_articles_panier').empty();
+			$('#nb_articles_panier').append(html);
+		}
+	</script>
 
   <body>
 
@@ -13,56 +35,38 @@
 			  <!-- Articles contenus dans le panier -->
 			  
 				<ul class="list-group">
-					<li class="list-group-item">
-						<div class="row">
-						 <!-- Decriptif article -->
-							<div class="col-3">
-								<img src="public/img/produit_newyork_0.jpeg" class="img-fluid">
-							</div>
-							<div class="col-5">
-								<p> Lego Architecture <br />
-									<b>New York City</b> <br />
-									<i>Quantité : <span class="qtt_produit">1</span></i>
-								</p>
-							</div>
-							<div class="col-4">
-								<p><span class="prix_produit">49.99</span>€</p>
-							</div>
-						</div>
-						<div class="row">
-						<!-- Bouton supprimer -->
-							<div class="col-12">
-								<p class="text-right">
-									<button class="btn btn-outline-danger sup_produit">Supprimer <span class="oi oi-trash"></span></button>
-								</p>
-							</div>
-						</div>
-					</li>
-					<li class="list-group-item">
-						<div class="row">
-						 <!-- Decriptif article -->
-							<div class="col-3">
-								<img src="public/img/produit_londres_0.jpeg" class="img-fluid">
-							</div>
-							<div class="col-5">
-								<p> Lego Architecture <br />
-									<b>New York City</b> <br />
-									<i>Quantité : <span class="qtt_produit">3</span></i>
-								</p>
-							</div>
-							<div class="col-4">
-								<p><span class="prix_produit">15.99</span>€</p>
-							</div>
-						</div>
-						<div class="row">
-						<!-- Bouton supprimer -->
-							<div class="col-12">
-								<p class="text-right">
-									<button class="btn btn-outline-danger sup_produit">Supprimer <span class="oi oi-trash"></span></button>
-								</p>
-							</div>
-						</div>
-					</li>
+					<?php 
+						foreach($_SESSION['panier'] as $idprod => $qtt) {
+							$pm = new ProduitManager;
+							$pm = $pm->getProduit($idprod);
+							$pm = $pm->fetch();
+							echo '<li class="list-group-item">
+								<div class="row">
+								<!-- Decriptif article -->
+									<div class="col-3">
+										<img src="public/img/' . $pm['img0'] . '" class="img-fluid">
+									</div>
+									<div class="col-5">
+										<p>' . $pm['libelle'] . '<br />
+											<b>' . $pm['nom'] . '</b> <br />
+											<i>Quantité : <span class="qtt_produit">' . $qtt . '</span></i>
+										</p>
+									</div>
+									<div class="col-4">
+										<p><span class="prix_produit">' . $pm['prix'] . '</span>€</p>
+									</div>
+								</div>
+								<div class="row">
+								<!-- Bouton supprimer -->
+									<div class="col-12">
+										<p class="text-right">
+											<button class="btn btn-outline-danger sup_produit" id="supp' . $idprod . '">Supprimer <span class="oi oi-trash"></span></button>
+										</p>
+									</div>
+								</div>
+							</li>';
+						}
+					?>
 				</ul>
 			</div>
 

@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html>
-
+	<script>
+		$(document).ready(function() {
+			$('.ajt').click(function(){
+				var id = $(this).attr('id').substr(5);
+				console.log(id);
+				$.ajax({
+					url: "public/ajax/ajoutPanier.php",
+					type: 'POST',
+					data: 'idProduit=' + id +'&qttProduit=' + $('#c_panier').text(),
+					success:function(html) {
+						afficher(html);
+					}
+				});
+			});
+		});
+		function afficher(html) {
+			console.log('id produit : ' + html +  'end')
+			$('#nb_articles_panier').empty();
+			$('#nb_articles_panier').append(html);
+		}
+	</script>
   <body>
 	
 	<script src="public/js/produit.js"></script>
@@ -43,7 +63,9 @@
 					<button class="btn btn-outline-dark" id="moins">-</button>
 					<button class="btn btn-secondary disabled" id="c_panier">1</button>
 					<button class="btn btn-outline-dark" id="plus">+</button> <br /> <br />
-					<a href="#" class="btn btn-primary btn-lg">Ajouter au panier <span class="oi oi-cart"></span></a>
+					<?php
+						echo '<button class="btn btn-primary btn-lg ajt" id="ajout' . $_GET['id'] . '">Ajouter au panier <span class="oi oi-cart"></span></button>';
+					?>
 				</p>
 			</div>
 		</div>	

@@ -76,7 +76,6 @@ $(document).ready(function() {
 	$('#avis').keypress(function(event) {
 		if(event.keyCode==13) {
 			var avis = new Commentaire(Date(),$(this).val());
-			console.log(avis);
 			// on vide le champs du commentaire
 			$(this).val("");
 		}

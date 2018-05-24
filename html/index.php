@@ -8,6 +8,12 @@
 	require_once DIR_CTRL . 'InscriptionController.php';
 	
 	session_start();
+	if(!isset($_SESSION['panier'])) {
+		$_SESSION['panier'] = [];
+	}
+	if(!isset($_SESSION['nbArticles'])) {
+		$_SESSION['nbArticles'] = 0;
+	}
 	$router = new Router();
 	if(isset($_GET['page'])) {
 		$data = $router->get($_GET['page']);

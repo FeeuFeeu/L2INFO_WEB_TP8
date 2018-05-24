@@ -5,14 +5,14 @@
 			<a href="?page=produits" class="nav-link">Produits</a>
 		</li>
 		<li class="nav-item">
-			<a href="?page=panier" class="nav-link">Panier&nbsp<span class="badge badge-secondary">2</span></a>
+			<a href="?page=panier" class="nav-link">Panier&nbsp<span class="badge badge-secondary" id="nb_articles_panier"><?php echo $_SESSION['nbArticles'] ?></span></a>
 		</li>
 	</ul>
 			<?php 
 		if(isset($_SESSION['id_client']) and (!empty($_SESSION['id_client'])) and isset($_SESSION['prenom_client']) and (!empty($_SESSION['prenom_client']))) {
 				echo 
 				'<div class="btn-group">
-				  <a type="button" class="btn btn-outline-secondary" href=""><span class="oi oi-person"></span>
+				  <a type="button" class="btn btn-outline-secondary" href="#"><span class="oi oi-person"></span>
 					' . $_SESSION['prenom_client'] .  
 				  '</a>
 				  <a type="button" class="btn btn-outline-secondary" href="?page=deconnexion"><span class="oi oi-account-logout"></span></a>

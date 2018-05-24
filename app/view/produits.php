@@ -1,3 +1,5 @@
+<script src="public/js/produits.js"></script>
+
 <h2>Produits</h2>
 
 <div class="row">
@@ -5,15 +7,14 @@
 	<div class="col-lg-3">
 
 		<p class="lead">Recherche</p>
-		<input type="text" class="form-control" placeholder="Rechercher un produit"/>
+		<input type="text" class="form-control" placeholder="Rechercher un produit" name="rechercheProduit"/>
 		<hr/>
 
 		<p class="lead">Catégorie</p>
-		<!-- TODO: afficher toutes les catégories de la base de données -->
 		<?php 
 			foreach($data['cats'] as $cat) {
 				echo 	'<div class="form-check">' .
-						'<input class="form-check-input" type="checkbox" value="" id="' . $cat . '" name="' . $cat .'>' .
+						'<input class="form-check-input" type="checkbox" value="" id="' . $cat . '" name="' . $cat .'" checked>' .
 						'<label class="form-check-label" for="' . $cat . '">' . $cat . '</label>' .
 						'</div>';
 			}
@@ -22,8 +23,8 @@
 		<hr/>
 
 		<p class="lead">Prix</p>
-		<input type="radio" name="prix" value="asc"> Croissant<br/>
-		<input type="radio" name="prix" value="desc"> Décroissant<br/>
+		<input type="radio" name="prix" value="asc" class="bouton_tri"> Croissant<br/>
+		<input type="radio" name="prix" value="desc" class="bouton_tri"> Décroissant<br/>
 	</div>
 
   <!-- Liste -->
@@ -40,6 +41,7 @@
 						<h5 class="card-title">' . $row['nom'] . '</h5>
 						<p class="font-weight-light float-left" style="font-size:1.5em">' . $row['prix'] . '€</p>
 						<p class="float-right">
+							<button class="btn btn-primary bouton_prod_plus" id="prod' . $row['id'] . '"><span class="oi oi-plus"></span></button>
 							<a href="?page=produit&id='. $row['id'] .'" class="btn btn-primary"><span class="oi oi-eye"></span></a>
 						</p>
 					</div>

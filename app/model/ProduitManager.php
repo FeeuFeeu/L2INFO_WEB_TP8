@@ -14,14 +14,13 @@
 		*/
 		public function getProduit($id_produit) {
 			$db = $this->connectDatabase();
-
-			$res = $db->query(
-				"select nom,prix,description,specificite,img0,img1,img2,img3,libelle 
-				from produits inner join catégories on catégories.id=produits.id_categorie
-				where produits.id=" . $id_produit
-			);
-
-			return $res; // PDOStatement
+			$requete = 	"select nom,prix,description,specificite,img0,img1,img2,img3,libelle 
+			from produits inner join catégories on catégories.id=produits.id_categorie
+			where produits.id=:idproduit";
+			$db = $db->prepare($requete);
+			$db->bindParam(':idproduit',$id_produit);
+			$db->execute();
+			return $db; // PDOStatement
 		}
 		
 		/*
@@ -33,14 +32,15 @@
 		*/
 		public function getCategories() {
 			$db = $this->connectDatabase();
+			$requete = "select libelle from catégories";
+			$db = $db->prepare($requete);
+			$db->execute();
 
-			$res = $db->query("select libelle from catégories");
-
-			$cat = $res->fetchColumn();
+			$cat = $db->fetchColumn();
 			$cats = array();
 			while($cat!==false) {
 				array_push($cats,$cat);
-				$cat = $res->fetchColumn();
+				$cat = $db->fetchColumn();
 			}
 			return $cats; // array type
 		}
@@ -54,10 +54,47 @@
 		*/
 		public function getProduits() {
 			$db = $this->connectDatabase();
-			$res = $db->query(
-				"select nom,produits.id,libelle,prix,img0,img1,img2,img3 from produits inner join catégories on catégories.id=produits.id_categorie"
-			);
-			return $res; // PDOStatement type
+			$requete = "select nom,produits.id,libelle,prix,img0,img1,img2,img3 
+			from produits inner join catégories on catégories.id=produits.id_categorie";
+			$db = $db->prepare($requete);
+			$db->execute();
+			return $db; // PDOStatement type
 		}
 
+		/*
+		* 
+		* name: getProduitsDeCategories($categorie, $tri, $recherche)
+		* @brief Fonction de recuperation des produits dans la BD en fonction
+		* des categories, d'un tri (prix croissant ou decroissant) et d'un schema de recherche.
+		* @param $categorie Tableau des categories des produits recherches.
+		* @param $tri Tri souhaitee (entier positif si tri croissant, tri decroissant si negatif, pas de tri sinon).
+		* @param $recherche Modele de recherche (chaine de caracteres avec metacaractere).
+		* @return Jeu de données associees aux produits recherches (PDOStatement).
+		* 
+		*/
+		public function getProduitsDeCategories($categorie, $tri, $recherche) {
+			$cats ="";
+			foreach($categorie as $cat) {
+				$cats = $cats . "?,";
+			}
+			$cats = substr($cats,0,-1);
+			$db = $this->connectDatabase();
+			$requete = 	"select nom,prix,description,specificite,img0,img1,img2,img3,libelle,produits.id
+			from produits inner join catégories on catégories.id=produits.id_categorie
+			where catégories.libelle in (" . $cats . ") and nom like ?" ;
+
+			if($tri>0) {
+				$requete = $requete . " order by prix asc";
+			}
+			else if($tri<0) {
+				$requete = $requete . " order by prix desc";
+			}
+			$recherche = '%' . $recherche . '%';
+			$db = $db->prepare($requete);
+
+			// On regroupe les parametres dans le tableau $categorie
+			array_push($categorie,$recherche);
+			$db->execute($categorie);
+			return $db; // PDOStatement
+		}
 	}

@@ -1,6 +1,37 @@
 <!DOCTYPE html>
 <html>
 
+	<script>
+		// Ajout de l'article au panier
+		$(document).ready(function() {
+			$('.ajt').click(function(){
+				var id = $(this).attr('id').substr(5);
+				var nb = $('#c_panier').text();
+				if(nb>=1) {
+					$.ajax({
+						url: "public/ajax/ajoutPanier.php",
+						type: 'POST',
+						data: 'idProduit=' + id +'&qttProduit=' + nb,
+						success:function(html) {
+							afficher(html);
+						}
+					});
+					$('.container').prepend('<div class="alert alert-success fade show alerteAjoutArticle" role="alert" style="position: fixed">Article ajouté !</div>');
+        			$('.alerteAjoutArticle').delay(2000).hide(500);
+        			$('.alerteAjoutArticle:hidden').remove();
+				}
+				else {
+					$('.container').prepend('<div class="alert alert-danger fade show alerteAjoutArticle" role="alert" style="position: fixed">Erreur !</div>');
+        			$('.alerteAjoutArticle').delay(2000).hide(500);
+       			 	$('.alerteAjoutArticle:hidden').remove();
+				}
+			});
+		});
+		function afficher(html) {
+			$('#nb_articles_panier').empty();
+			$('#nb_articles_panier').append(html);
+		}
+	</script>
   <body>
 	
 	<script src="public/js/produit.js"></script>
@@ -43,7 +74,9 @@
 					<button class="btn btn-outline-dark" id="moins">-</button>
 					<button class="btn btn-secondary disabled" id="c_panier">1</button>
 					<button class="btn btn-outline-dark" id="plus">+</button> <br /> <br />
-					<a href="#" class="btn btn-primary btn-lg">Ajouter au panier <span class="oi oi-cart"></span></a>
+					<?php
+						echo '<button class="btn btn-primary btn-lg ajt" id="ajout' . $_GET['id'] . '">Ajouter au panier <span class="oi oi-cart"></span></button>';
+					?>
 				</p>
 			</div>
 		</div>	

@@ -13,7 +13,6 @@ class InscriptionController {
 		return ($year%400==0)||(($year%4==0)&&($year%100!=0));
 	}
 	private function checkDate($day, $month, $year) {
-		//if(($day=="") || ($month=="") || ($year=="")) {return false;}
 		/* Si le mois est
 		 * avril, juin, septembre ou novembre,
 		 * on a 30 jours */
@@ -24,9 +23,9 @@ class InscriptionController {
 		  * 28 jours sinon */
 		 else if($month==2) {
 			// si l'annee est bissextile -> 29 jours
-			if(isLeapYear($year) && $day>29) {return false;}
+			if($this->isLeapYear($year) && $day>29) {return false;}
 			// sinon -> 28 jours
-			else if(!isLeapYear($year) && $day>28) {return false;}
+			else if(!$this->isLeapYear($year) && $day>28) {return false;}
 		}
 		 // pour les autres mois, pas de verifications necessaires
 		 // (le champs jour contient 31 jours)

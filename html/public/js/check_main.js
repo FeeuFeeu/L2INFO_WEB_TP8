@@ -41,7 +41,6 @@ $(document).ready(function() {
     inputAnNais: $('#inputAnNais'),
     inputMotPasse: $('#inputMotPasse'),
     inputConfMotPasse: $('#inputConfMotPasse'),
-    // TODO: autres champs...
   };
 
 	// associe une fonction de verifie a chaque field
@@ -54,7 +53,6 @@ $(document).ready(function() {
     inputAnNais: { fun: checkDate, data: [Fields.inputJourNais,Fields.inputMoisNais,Fields.inputAnNais]},
     inputMotPasse: { fun: checkPasswords, data: [Fields.inputMotPasse, Fields.inputConfMotPasse]},
     inputConfMotPasse: { fun: checkPasswords, data: [Fields.inputMotPasse, Fields.inputConfMotPasse]},
-    // TODO: autres checkers...
   };
 
   // Listeners
@@ -88,9 +86,6 @@ $(document).ready(function() {
 			Feedback.error([$('#confInscr')]);
 			event.preventDefault();
 		}
-  
-    console.log('TODO: verifier si tout est OK !');
-    // TODO: envoyer si tout est OK
   });
   
   
@@ -119,23 +114,4 @@ $(document).ready(function() {
 			$('#texteForceMotPasse').text("Force du mot de passe excellente.");
 		}
 	});
-	
-	/// ** Affichage des champs invalides avant l'envoi du formulaire d'inscription *//
-	/*$('#boutonInscription').click( function() {
-		// Recuperation des champs non validés
-		// Sauf la checkbox et le bouton d'envoi
-		champs_non_valides = $('#sign').find(':input').not('.is-valid').not('.form-check-input').not('.btn');
-		if(champs_non_valides.length>0)
-			Feedback.error([champs_non_valides]);*/
-		// Si tous les champs sont valides,
-		// On vérifie la checkbox
-		/*else if($('#confInscr').not(':checked'))
-			Feedback.error([$('#confInscr')]);*/
-		/*else if($('#confInscr').is(':checked'))
-			Feedback.validate([$('#confInscr')]);
-		//else
-		//	Feedback.validate([$('#confInscr')]);
-
-			
-	});*/
 });
